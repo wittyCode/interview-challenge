@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: test
+    password: test
+  flyway:
+    baseline-on-migrate: true
+    clean-disabled: false
+  docker:
+    compose:
+      enabled: true
+      file: docker-compose.yml
