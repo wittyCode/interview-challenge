@@ -5,6 +5,7 @@ import com.lexware.customer_management.entity.CustomerRepository;
 import com.lexware.customer_management.errorhandling.CustomerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  @Transactional
   public Customer save(final Customer entity) {
     return customerRepository.save(entity);
   }

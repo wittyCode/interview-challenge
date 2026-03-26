@@ -19,24 +19,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = CustomerController.class)
 public class CustomerControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private CustomerService customerService;
+  @MockitoBean private CustomerService customerService;
 
-    @MockitoBean
-    private CustomerDtoMapper customerDtoMapper;
+  @MockitoBean private CustomerDtoMapper customerDtoMapper;
 
-    @Test
-    void whenInputIsInvalid_return400() throws Exception {
-        String body = objectMapper.writeValueAsString("invalid Input");
-        mockMvc.perform(post("/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(status().isBadRequest());
-    }
+  @Test
+  void whenInputIsInvalid_return400() throws Exception {
+    String body = objectMapper.writeValueAsString("invalid Input");
+    mockMvc
+        .perform(post("/customers").contentType(MediaType.APPLICATION_JSON).content(body))
+        .andExpect(status().isBadRequest());
+  }
 }

@@ -1,13 +1,12 @@
 package com.lexware.customer_management.rest;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class CustomerDto {
 
-  private long id;
+  private Long id;
 
   @NotBlank(message = "First name is mandatory")
   private String firstName;
@@ -23,11 +22,11 @@ public class CustomerDto {
   @Pattern(regexp = "[0-9]{5}", message = "ZIP codes must be exactly 5 digits long")
   private String zipCode;
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
