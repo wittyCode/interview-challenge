@@ -1,6 +1,8 @@
-package com.lexware.customer_management.entity;
+package com.interview.customer_management.customer.entity;
 
 import jakarta.persistence.*;
+
+import java.time.Instant;
 
 /** Entity representing a customer in the database */
 @Entity
@@ -28,6 +30,12 @@ public class Customer {
   private String zipCode;
 
   @Column private String city;
+
+  @Column(name = "created_at_utc")
+  private Instant createdAtUtc;
+
+  @Column(name = "updated_at_utc")
+  private Instant updatedAtUtc;
 
   public Long getId() {
     return id;
@@ -91,6 +99,33 @@ public class Customer {
 
   public void setCity(String city) {
     this.city = city;
+  }
+
+  public Instant getCreatedAtUtc() {
+    return createdAtUtc;
+  }
+
+  public void setCreatedAtUtc(Instant createdAtUtc) {
+    this.createdAtUtc = createdAtUtc;
+  }
+
+  public Instant getUpdatedAtUtc() {
+    return updatedAtUtc;
+  }
+
+  public void setUpdatedAtUtc(Instant updatedAtUtc) {
+    this.updatedAtUtc = updatedAtUtc;
+  }
+
+  @PrePersist
+  public void initAuditTimestamps() {
+      this.createdAtUtc = Instant.now();
+      this.updatedAtUtc = Instant.now();
+  }
+
+  @PreUpdate
+  public void updateAuditTimestamp() {
+      this.updatedAtUtc = Instant.now();
   }
 
   @Override

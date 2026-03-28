@@ -1,4 +1,4 @@
-package com.lexware.customer_management;
+package com.interview.customer_management;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;

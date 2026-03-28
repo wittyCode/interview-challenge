@@ -1,4 +1,4 @@
-package com.lexware.customer_management;
+package com.interview.customer_management;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

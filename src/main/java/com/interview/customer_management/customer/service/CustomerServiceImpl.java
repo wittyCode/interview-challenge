@@ -1,14 +1,16 @@
-package com.lexware.customer_management.service;
+package com.interview.customer_management.customer.service;
 
-import com.lexware.customer_management.entity.Customer;
-import com.lexware.customer_management.entity.CustomerRepository;
-import com.lexware.customer_management.errorhandling.CustomerNotFoundException;
+import com.interview.customer_management.customer.entity.Customer;
+import com.interview.customer_management.customer.entity.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * @see CustomerService
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
