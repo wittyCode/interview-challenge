@@ -7,10 +7,8 @@ import com.interview.customer_management.customer.rest.CustomerController;
 import com.interview.customer_management.customer.rest.CustomerDto;
 import com.interview.customer_management.customer.rest.CustomerDtoMapper;
 import com.interview.customer_management.customer.service.CustomerService;
-
 import java.time.Instant;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

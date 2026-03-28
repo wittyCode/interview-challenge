@@ -40,9 +40,6 @@ public class CustomerController {
   @Tag(name = "Create", description = "Create new customer in DB")
   @PostMapping
   public CustomerDto create(@Valid @RequestBody final CustomerDto customerDto) {
-    // setting id to null will lead to DB creating new id from sequence, which is what we want on
-    // POST endpoint
-    customerDto.setId(null);
     return saveToDB(customerDto);
   }
 
