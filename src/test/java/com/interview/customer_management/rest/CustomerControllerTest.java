@@ -47,7 +47,7 @@ public class CustomerControllerTest {
   void whenInputIsInvalid_return400(CustomerDto input) throws Exception {
     String body = objectMapper.writeValueAsString(input);
     mockMvc
-        .perform(post("/customers").contentType(MediaType.APPLICATION_JSON).content(body))
+        .perform(post("/api/customers").contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isBadRequest());
   }
 
@@ -55,7 +55,7 @@ public class CustomerControllerTest {
   void whenInputInvalid_return200() throws Exception {
     String body = objectMapper.writeValueAsString(validCustomerDto());
     mockMvc
-        .perform(post("/customers").contentType(MediaType.APPLICATION_JSON).content(body))
+        .perform(post("/api/customers").contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isOk());
   }
 
