@@ -1,13 +1,18 @@
 @import 'tailwindcss';
 
+/*
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
+*/
 
 @theme {
     --color-primary: rgb(255, 69, 85);
-    --color-sitebg: rgba(0, 0, 0, 0.16);
+    --color-site-bg: rgba(0, 0, 0, 0.16);
+    --color-header-bg: rgb(68, 68, 68);
+    --color-btn-primary: rgb(14, 158, 87);
+    --color-btn-hover: rgb(10, 112, 62);
     --font-inter: Inter, sans-serif;
 }

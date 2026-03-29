@@ -4,12 +4,12 @@ import com.interview.customer_management.customer.rest.validation.ValidSalesTaxI
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
 import java.time.Instant;
 
 /**
  * DTO containing necessary data to sync data between our Customer interface and REST API consumers.
- * Simple Java Bean supplemented by validation constraints for automated input validation on REST endpoint
+ * Simple Java Bean supplemented by validation constraints for automated input validation on REST
+ * endpoint
  */
 public record CustomerDto(
     Long id,
