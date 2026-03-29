@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import type { Customer } from '@/types/customer';
+import Input from '@/components/Input.tsx';
 
 const EMPTY_CUSTOMER: Customer = {
   firstName: '',
@@ -41,20 +42,24 @@ function App() {
     setEditDialogOpen(false);
     setEditingCustomer(null);
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditingCustomer({
-      ...editingCustomer,
-      [e.target.name]: e.target.value,
-    });
+
+  const handleChange = (name: string, value: string) => {
+    console.log('change', name, value);
+    setEditingCustomer((prev: Customer) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e: React.InputEvent) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(editingCustomer);
     if (isEditing) {
       console.log('updating customer');
     } else {
       console.log('create new customer');
+      editingCustomer.id = customers.length + 1;
+      customers.push(editingCustomer);
     }
     closeEditDialog();
   };
@@ -122,66 +127,60 @@ function App() {
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div id="background" className="absolute inset-0 bg-black/50" onClick={() => closeEditDialog()}></div>
             <div id="editDialog" className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
+              <button onClick={() => closeEditDialog()}>X</button>
               <h2 className="mb-4 text-xl font-semibold">Kunden {isEditing ? 'bearbeiten ' : 'anlegen'}</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  type="text"
-                  name="firstName"
+                <Input
                   value={editingCustomer.firstName}
+                  label="Vorname"
+                  placeholder="Vorname"
+                  name="firstName"
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
                 />
-                <input
-                  type="text"
-                  name="lastName"
+                <Input
                   value={editingCustomer.lastName}
+                  label="Nachname"
+                  placeholder="Nachname"
+                  name="lastName"
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
                 />
-                <input
-                  type="text"
-                  name="description"
+                <Input
                   value={editingCustomer.description}
+                  label="Informationen"
+                  placeholder="Informationen"
+                  name="description"
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
                 />
-                <input
-                  type="text"
-                  name="salesTaxId"
+                <Input
                   value={editingCustomer.salesTaxId}
+                  label="Umsatzsteuer-ID"
+                  placeholder="Umsatzsteuer-ID"
+                  name="salesTaxId"
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
                 />
-                <input
-                  type="text"
-                  name="address"
+                <Input
                   value={editingCustomer.address}
+                  label="Adresse"
+                  placeholder="Adresse"
+                  name="address"
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
                 />
-                <input
-                  type="text"
-                  name="zipCode"
+                <Input
                   value={editingCustomer.zipCode}
+                  label="PLZ"
+                  placeholder="PLZ"
+                  name="zipCode"
                   onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
                 />
-                <input
-                  type="text"
-                  name="city"
-                  value={editingCustomer.city}
-                  onChange={handleChange}
-                  className="w-full rounded border p-2"
-                  placeholder="First Name"
-                />
-                <button type="submit">Speichern</button>
-                <button onClick={() => closeEditDialog()}>close</button>
+                <Input value={editingCustomer.city} label="Ort" placeholder="Ort" name="city" onChange={handleChange} />
+                <div id="editButtonBar" className="flex items-center justify-end px-2 py-2">
+                  <button
+                    className="bg-btn-primary hover:bg-btn-hover rounded-xl p-4 font-bold text-white hover:cursor-pointer"
+                    type="submit"
+                  >
+                    Speichern
+                  </button>
+                </div>
               </form>
             </div>
           </div>
