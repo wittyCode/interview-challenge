@@ -12,7 +12,7 @@ import java.time.Instant;
  * endpoint
  */
 public record CustomerDto(
-    Long id,
+    long id,
     @NotBlank(message = "First name is mandatory.") String firstName,
     @NotBlank(message = "Last name is mandatory.") String lastName,
     @Size(max = 100, message = "Description may only be up to 100 characters") String description,

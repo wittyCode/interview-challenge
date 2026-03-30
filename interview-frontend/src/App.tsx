@@ -1,10 +1,12 @@
-import * as React from 'react';
 import { useState } from 'react';
-import type { Customer } from '@/types/customer';
+import type { Customer } from './types/customer';
 import CustomerEditDialog from './components/CustomerEditDialog.tsx';
 import CustomerTable from './components/CustomerTable.tsx';
+import { useCustomers } from './hooks/useCustomers.ts';
+import { deleteCustomer } from './services/customersApi.ts';
 
 const EMPTY_CUSTOMER: Customer = {
+  id: 0,
   firstName: '',
   lastName: '',
   description: '',
@@ -18,9 +20,9 @@ const EMPTY_CUSTOMER: Customer = {
 
 function App() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
+  const [editingCustomer, setEditingCustomer] = useState<Customer>(EMPTY_CUSTOMER);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [customers, setCustomers] = useState<Customer[]>(initialCustomers);
+  const { customers, loading, error, loadCustomers } = useCustomers();
 
   const handleEditCustomer = (customer: Customer) => {
     setEditingCustomer(customer);
@@ -29,9 +31,10 @@ function App() {
     setEditDialogOpen(true);
   };
 
-  const handleDeleteCustomer = (customer: Customer) => {
-    console.log('delete customer', customer.id);
-    setCustomers((prev) => prev.filter((it) => it.id !== customer.id));
+  const handleDeleteCustomer = async (customer: Customer) => {
+    // todo do you really want to delete modal?
+    await deleteCustomer(customer);
+    loadCustomers();
   };
 
   const handleAddCustomer = () => {
@@ -42,8 +45,9 @@ function App() {
 
   const closeEditDialog = () => {
     setEditDialogOpen(false);
-    setEditingCustomer(null);
+    setEditingCustomer(EMPTY_CUSTOMER);
     setIsEditing(false);
+    loadCustomers();
   };
 
   return (
@@ -67,16 +71,17 @@ function App() {
             </button>
           </div>
 
-          <CustomerTable customers={customers} editFn={handleEditCustomer} deleteFn={handleDeleteCustomer} />
+          <CustomerTable
+            customers={customers}
+            editFn={handleEditCustomer}
+            deleteFn={handleDeleteCustomer}
+            isLoading={loading}
+            errorMsg={error}
+          />
         </main>
 
         {editDialogOpen && (
-          <CustomerEditDialog
-            closeFn={closeEditDialog}
-            isEditing={isEditing}
-            customer={editingCustomer}
-            customerCollection={customers}
-          />
+          <CustomerEditDialog closeFn={closeEditDialog} isEditing={isEditing} customer={editingCustomer} />
         )}
       </div>
     </>
@@ -84,30 +89,3 @@ function App() {
 }
 
 export default App;
-
-const initialCustomers: Customer[] = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    description: 'VIP client',
-    salesTaxId: 'DE123456789',
-    address: 'Main St 1',
-    zipCode: '88045',
-    city: 'Friedrichshafen',
-    createdAtUtc: '2024-01-01',
-    updatedAtUtc: '2024-01-02',
-  },
-  {
-    id: 2,
-    firstName: 'Jane',
-    lastName: 'Smith',
-    description: 'New customer',
-    salesTaxId: 'DE987654321',
-    address: 'Lake Rd 5',
-    zipCode: '88046',
-    city: 'Friedrichshafen',
-    createdAtUtc: '2024-02-01',
-    updatedAtUtc: '2024-02-02',
-  },
-];

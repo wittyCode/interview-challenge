@@ -26,7 +26,7 @@ public class ValidSalesTaxIdValidator implements ConstraintValidator<ValidSalesT
       final String salesTaxIdToValidate,
       final ConstraintValidatorContext constraintValidatorContext) {
     // since sales tax id is not mandatory, can return early if field is null / not set
-    if (salesTaxIdToValidate == null) {
+    if (salesTaxIdToValidate == null || salesTaxIdToValidate.isEmpty()) {
       return true;
     }
     // given value is not long enough to even extract country code -

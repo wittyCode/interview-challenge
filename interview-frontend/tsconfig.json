@@ -3,9 +3,6 @@
   "baseUrl": ".",
   "paths": {
     "@/*": ["./src/*"],
-    "@components/*": ["src/components/*"],
-    "@features/*": ["src/features/*"],
-    "@utils/*": ["src/utils/*"]
   },
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

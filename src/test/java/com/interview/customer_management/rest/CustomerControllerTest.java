@@ -61,28 +61,18 @@ public class CustomerControllerTest {
 
   private static Stream<Arguments> provideInvalidCustomerDtos() {
     return Stream.of(
+        Arguments.of(new CustomerDto(0, null, LAST_NAME, null, null, null, null, null, null, null)),
         Arguments.of(
-            new CustomerDto(null, null, LAST_NAME, null, null, null, null, null, null, null)),
-        Arguments.of(
-            new CustomerDto(null, FIRST_NAME, null, null, null, null, null, null, null, null)),
-        Arguments.of(
-            new CustomerDto(
-                null,
-                FIRST_NAME,
-                LAST_NAME,
-                null,
-                null,
-                TOO_SHORT_ZIPCODE,
-                null,
-                null,
-                null,
-                null)),
+            new CustomerDto(0, FIRST_NAME, null, null, null, null, null, null, null, null)),
         Arguments.of(
             new CustomerDto(
-                null, FIRST_NAME, LAST_NAME, null, null, TOO_LONG_ZIPCODE, null, null, null, null)),
+                0, FIRST_NAME, LAST_NAME, null, null, TOO_SHORT_ZIPCODE, null, null, null, null)),
         Arguments.of(
             new CustomerDto(
-                null,
+                0, FIRST_NAME, LAST_NAME, null, null, TOO_LONG_ZIPCODE, null, null, null, null)),
+        Arguments.of(
+            new CustomerDto(
+                0,
                 FIRST_NAME,
                 LAST_NAME,
                 null,
@@ -94,7 +84,7 @@ public class CustomerControllerTest {
                 null)),
         Arguments.of(
             new CustomerDto(
-                null,
+                0,
                 FIRST_NAME,
                 LAST_NAME,
                 TOO_LONG_DESCRIPTION,
@@ -108,7 +98,7 @@ public class CustomerControllerTest {
 
   private CustomerDto validCustomerDto() {
     return new CustomerDto(
-        null,
+        0,
         FIRST_NAME,
         LAST_NAME,
         "foo",

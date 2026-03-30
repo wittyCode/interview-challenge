@@ -1,7 +1,6 @@
 package com.interview.customer_management.customer.entity;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
 
 /** Entity representing a customer in the database */
@@ -11,7 +10,7 @@ public class Customer {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private long id;
 
   @Column(name = "first_name")
   private String firstName;
@@ -37,11 +36,11 @@ public class Customer {
   @Column(name = "updated_at_utc")
   private Instant updatedAtUtc;
 
-  public Long getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(long id) {
     this.id = id;
   }
 

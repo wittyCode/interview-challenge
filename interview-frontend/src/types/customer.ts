@@ -7,6 +7,6 @@ export interface Customer {
   address: string;
   zipCode: string;
   city: string;
-  createdAtUtc: Date;
-  updatedAtUtc: Date;
+  createdAtUtc: Date | null;
+  updatedAtUtc: Date | null;
 }

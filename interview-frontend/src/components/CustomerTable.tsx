@@ -4,41 +4,46 @@ type CustomerTableProps = {
   customers: Customer[];
   editFn: (customer: Customer) => void;
   deleteFn: (customer: Customer) => void;
+  isLoading: boolean;
+  errorMsg: string | null;
 };
 
-export default function CustomerTable({ customers, editFn, deleteFn }: CustomerTableProps) {
+export default function CustomerTable({ customers, editFn, deleteFn, isLoading, errorMsg }: CustomerTableProps) {
+  const customersToRows = customers.map((customer) => (
+    <tr key={customer.id} className="hover:bg-gray-500">
+      <td>{customer.firstName}</td>
+      <td>{customer.lastName}</td>
+      <td>{customer.description}</td>
+      <td>{customer.salesTaxId}</td>
+      <td>{customer.address}</td>
+      <td>{customer.zipCode}</td>
+      <td>{customer.city}</td>
+      <td>
+        <button onClick={() => editFn(customer)}>edit</button>
+        <button onClick={() => deleteFn(customer)}>del</button>
+      </td>
+    </tr>
+  ));
+
   return (
     <div>
-      <table className="w-full">
-        <thead>
-          <tr>
-            <td>Vorname</td>
-            <td>Nachname</td>
-            <td>Beschreibung</td>
-            <td>Ust-Idnr.</td>
-            <td>Adresse</td>
-            <td>PLZ</td>
-            <td>Ort</td>
-          </tr>
-        </thead>
-        <tbody>
-          {customers.map((customer: Customer) => (
-            <tr key={customer.id} className="hover:bg-gray-500">
-              <td>{customer.firstName}</td>
-              <td>{customer.lastName}</td>
-              <td>{customer.description}</td>
-              <td>{customer.salesTaxId}</td>
-              <td>{customer.address}</td>
-              <td>{customer.zipCode}</td>
-              <td>{customer.city}</td>
-              <td>
-                <button onClick={() => editFn(customer)}>edit</button>
-                <button onClick={() => deleteFn(customer)}>del</button>
-              </td>
+      {isLoading && <p>Loading...</p>}
+      {(errorMsg && <p>{errorMsg}</p>) || (
+        <table className="w-full">
+          <thead>
+            <tr>
+              <td>Vorname</td>
+              <td>Nachname</td>
+              <td>Beschreibung</td>
+              <td>Ust-Idnr.</td>
+              <td>Adresse</td>
+              <td>PLZ</td>
+              <td>Ort</td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>{customersToRows}</tbody>
+        </table>
+      )}
     </div>
   );
 }

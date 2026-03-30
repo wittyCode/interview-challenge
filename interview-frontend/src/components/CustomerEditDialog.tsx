@@ -2,20 +2,15 @@ import type { Customer } from '../types/customer.ts';
 import Input from './Input.tsx';
 import * as React from 'react';
 import { useState } from 'react';
+import { postCustomer, putCustomer } from '../services/customersApi.ts';
 
 type CustomerEditDialogProps = {
   closeFn: () => void;
   customer: Customer;
   isEditing: boolean;
-  customerCollection: Customer[];
 };
 
-export default function CustomerEditDialog({
-  closeFn,
-  customer,
-  isEditing,
-  customerCollection,
-}: CustomerEditDialogProps) {
+export default function CustomerEditDialog({ closeFn, customer, isEditing }: CustomerEditDialogProps) {
   const [editingCustomer, setEditingCustomer] = useState<Customer>(customer);
 
   const handleChange = (name: string, value: string) => {
@@ -26,17 +21,15 @@ export default function CustomerEditDialog({
     }));
   };
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(editingCustomer);
     if (isEditing) {
       console.log('updating customer');
-      customerCollection[editingCustomer.id - 1] = editingCustomer;
+      await putCustomer(editingCustomer);
     } else {
       console.log('create new customer');
-      console.log(customerCollection);
-      editingCustomer.id = customerCollection[customerCollection.length - 1].id + 1;
-      customerCollection.push(editingCustomer);
+      await postCustomer(editingCustomer);
     }
     closeFn();
   };
@@ -50,7 +43,9 @@ export default function CustomerEditDialog({
             X
           </button>
         </div>
+
         <h2 className="mb-4 text-xl font-semibold">Kunden {isEditing ? 'bearbeiten ' : 'anlegen'}</h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             value={editingCustomer.firstName}
@@ -89,6 +84,7 @@ export default function CustomerEditDialog({
           />
           <Input value={editingCustomer.zipCode} label="PLZ" placeholder="PLZ" name="zipCode" onChange={handleChange} />
           <Input value={editingCustomer.city} label="Ort" placeholder="Ort" name="city" onChange={handleChange} />
+
           <div id="editButtonBar" className="flex items-center justify-end p-2">
             <button
               className="bg-btn-primary hover:bg-btn-hover rounded-xl p-4 font-bold text-white hover:cursor-pointer"
