@@ -5,8 +5,8 @@ export interface Customer {
   description: string;
   salesTaxId: string;
   address: string;
-  zipCode: string;
+  zipCode?: string;
   city: string;
-  createdAtUtc: Date | null;
-  updatedAtUtc: Date | null;
+  createdAtUtc?: Date;
+  updatedAtUtc?: Date;
 }

@@ -14,8 +14,6 @@ const EMPTY_CUSTOMER: Customer = {
   address: '',
   zipCode: '',
   city: '',
-  createdAtUtc: null,
-  updatedAtUtc: null,
 };
 
 function App() {
@@ -27,7 +25,6 @@ function App() {
   const handleEditCustomer = (customer: Customer) => {
     setEditingCustomer(customer);
     setIsEditing(true);
-    console.log('updating customer');
     setEditDialogOpen(true);
   };
 
@@ -39,7 +36,6 @@ function App() {
 
   const handleAddCustomer = () => {
     setEditingCustomer(EMPTY_CUSTOMER);
-    console.log('creating new customer');
     setEditDialogOpen(true);
   };
 

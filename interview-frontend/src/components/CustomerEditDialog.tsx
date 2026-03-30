@@ -3,6 +3,7 @@ import Input from './Input.tsx';
 import * as React from 'react';
 import { useState } from 'react';
 import { postCustomer, putCustomer } from '../services/customersApi.ts';
+import axios from 'axios';
 
 type CustomerEditDialogProps = {
   closeFn: () => void;
@@ -10,26 +11,90 @@ type CustomerEditDialogProps = {
   isEditing: boolean;
 };
 
+class ErrorContainer {
+  firstName?: string;
+  lastName?: string;
+  salesTaxId?: string;
+  zipCode?: string;
+  description?: string;
+
+  public hasValidationIssues() {
+    return this.firstName || this.lastName || this.salesTaxId || this.zipCode || this.description;
+  }
+}
+
 export default function CustomerEditDialog({ closeFn, customer, isEditing }: CustomerEditDialogProps) {
   const [editingCustomer, setEditingCustomer] = useState<Customer>(customer);
+  const [errors, setErrors] = useState<ErrorContainer>(new ErrorContainer());
 
   const handleChange = (name: string, value: string) => {
-    console.log('change', name, value);
+    setErrors(new ErrorContainer());
     setEditingCustomer((prev: Customer) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  /**
+   * frontend validations, correct sales tax Id syntax is validated on backend to avoid code duplication
+   */
+  const validate = () => {
+    const errorsFound = new ErrorContainer();
+    if (!editingCustomer.firstName.trim()) {
+      errorsFound.firstName = 'Bitte gib einen Vornamen ein.';
+    }
+    if (!editingCustomer.lastName.trim()) {
+      errorsFound.lastName = 'Bitte gib einen Nachnamen ein.';
+    }
+    if (editingCustomer.description.length > 100) {
+      errorsFound.description = 'Maximal 100 Zeichen erlaubt';
+    }
+    if (editingCustomer.zipCode?.trim() && !/^\d{5}$/.test(editingCustomer.zipCode)) {
+      errorsFound.zipCode = 'Gib eine gültige fünfstellige Postleitzahl ein';
+    }
+
+    return errorsFound;
+  };
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(editingCustomer);
+    const validationErrors = validate();
+    if (validationErrors.hasValidationIssues()) {
+      setErrors(validationErrors);
+      return;
+    }
+    // workaround to make sure spring boot validation does not throw validation error on empty string
+    if (editingCustomer.zipCode == '') {
+      editingCustomer.zipCode = undefined;
+    }
     if (isEditing) {
-      console.log('updating customer');
-      await putCustomer(editingCustomer);
+      try {
+        await putCustomer(editingCustomer);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const errorMsg = error.response?.data.message;
+          if (errorMsg === 'SALES_TAX_ID_VALIDATION_ERROR') {
+            const salesTaxError = new ErrorContainer();
+            salesTaxError.salesTaxId = 'Gib eine gülige Umsatzsteuer-ID ein.';
+            setErrors(salesTaxError);
+          }
+        }
+        return;
+      }
     } else {
-      console.log('create new customer');
-      await postCustomer(editingCustomer);
+      try {
+        await postCustomer(editingCustomer);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const errorMsg = error.response?.data.message;
+          if (errorMsg === 'SALES_TAX_ID_VALIDATION_ERROR') {
+            const salesTaxError = new ErrorContainer();
+            salesTaxError.salesTaxId = 'Gib eine gülige Umsatzsteuer-ID ein.';
+            setErrors(salesTaxError);
+          }
+        }
+        return;
+      }
     }
     closeFn();
   };
@@ -49,17 +114,19 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             value={editingCustomer.firstName}
-            label="Vorname"
+            label="Vorname*"
             placeholder="Vorname"
             name="firstName"
             onChange={handleChange}
+            error={errors.firstName}
           />
           <Input
             value={editingCustomer.lastName}
-            label="Nachname"
+            label="Nachname*"
             placeholder="Nachname"
             name="lastName"
             onChange={handleChange}
+            error={errors.lastName}
           />
           <Input
             value={editingCustomer.description}
@@ -67,6 +134,7 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
             placeholder="Informationen"
             name="description"
             onChange={handleChange}
+            error={errors.description}
           />
           <Input
             value={editingCustomer.salesTaxId}
@@ -74,6 +142,7 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
             placeholder="Umsatzsteuer-ID"
             name="salesTaxId"
             onChange={handleChange}
+            error={errors.salesTaxId}
           />
           <Input
             value={editingCustomer.address}
@@ -82,7 +151,14 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
             name="address"
             onChange={handleChange}
           />
-          <Input value={editingCustomer.zipCode} label="PLZ" placeholder="PLZ" name="zipCode" onChange={handleChange} />
+          <Input
+            value={editingCustomer.zipCode || ''}
+            label="PLZ"
+            placeholder="PLZ"
+            name="zipCode"
+            onChange={handleChange}
+            error={errors.zipCode}
+          />
           <Input value={editingCustomer.city} label="Ort" placeholder="Ort" name="city" onChange={handleChange} />
 
           <div id="editButtonBar" className="flex items-center justify-end p-2">

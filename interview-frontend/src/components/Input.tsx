@@ -4,9 +4,10 @@ type InputProps = {
   placeholder: string;
   name: string;
   onChange: (name: string, value: string) => void;
+  error?: string;
 };
 
-export default function Input({ onChange, name, value, placeholder, label }: InputProps) {
+export default function Input({ onChange, name, value, placeholder, label, error }: InputProps) {
   const inputId = name + 'Input';
 
   return (
@@ -21,8 +22,9 @@ export default function Input({ onChange, name, value, placeholder, label }: Inp
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(name, e.target.value)}
-        className="w-full rounded border p-2"
+        className="w-full rounded border border-gray-200 p-2 focus:border-green-600 focus-visible:outline-none"
       />
+      {error && <p className="text-sm font-semibold text-red-500">{error}</p>}
     </div>
   );
 }
