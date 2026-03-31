@@ -30,6 +30,10 @@ public class Customer {
 
   @Column private String city;
 
+  @Column
+  @Enumerated(EnumType.STRING)
+  private Countries country;
+
   @Column(name = "created_at_utc")
   private Instant createdAtUtc;
 
@@ -100,6 +104,14 @@ public class Customer {
     this.city = city;
   }
 
+  public Countries getCountry() {
+    return country;
+  }
+
+  public void setCountry(Countries country) {
+    this.country = country;
+  }
+
   public Instant getCreatedAtUtc() {
     return createdAtUtc;
   }
@@ -118,13 +130,13 @@ public class Customer {
 
   @PrePersist
   public void initAuditTimestamps() {
-      this.createdAtUtc = Instant.now();
-      this.updatedAtUtc = Instant.now();
+    this.createdAtUtc = Instant.now();
+    this.updatedAtUtc = Instant.now();
   }
 
   @PreUpdate
   public void updateAuditTimestamp() {
-      this.updatedAtUtc = Instant.now();
+    this.updatedAtUtc = Instant.now();
   }
 
   @Override
@@ -149,6 +161,9 @@ public class Customer {
         + '\''
         + ", zipCode='"
         + zipCode
+        + '\''
+        + ", country='"
+        + country
         + '\''
         + ", city='"
         + city

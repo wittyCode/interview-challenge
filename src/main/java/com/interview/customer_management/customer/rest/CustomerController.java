@@ -26,7 +26,7 @@ public class CustomerController {
   @Tag(name = "Read", description = "Find customers in DB")
   @GetMapping
   public List<CustomerDto> findAll() {
-    final var customers = customerService.findAll();
+    final var customers = customerService.findAllOrderById();
     return customers.stream().map(customerDtoMapper::entityToDto).toList();
   }
 

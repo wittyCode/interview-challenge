@@ -2,11 +2,10 @@ package com.interview.customer_management.customer.service;
 
 import com.interview.customer_management.customer.entity.Customer;
 import com.interview.customer_management.customer.entity.CustomerRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * @see CustomerService
@@ -22,8 +21,8 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public List<Customer> findAll() {
-    return customerRepository.findAll();
+  public List<Customer> findAllOrderById() {
+    return customerRepository.findAllByOrderById();
   }
 
   @Override

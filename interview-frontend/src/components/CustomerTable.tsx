@@ -1,5 +1,6 @@
 import type { Customer } from '../types/customer.ts';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import useCountryCodeToNameMapping from '../hooks/useCountryCodeMapping.ts';
 
 type CustomerTableProps = {
   customers: Customer[];
@@ -22,6 +23,7 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
       <td>{customer.address}</td>
       <td>{customer.zipCode}</td>
       <td>{customer.city}</td>
+      <td>{customer.country && useCountryCodeToNameMapping(customer.country)}</td>
       <td className={index === customers.length - 1 ? lastButtonCellClasses : buttonCellClasses}>
         <button onClick={() => editFn(customer)} className="hover:cursor-pointer">
           <MdEdit size="1.5em" />
@@ -47,6 +49,7 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
               <td>Adresse</td>
               <td>PLZ</td>
               <td>Ort</td>
+              <td>Land</td>
             </tr>
           </thead>
           <tbody>{customersToRows}</tbody>

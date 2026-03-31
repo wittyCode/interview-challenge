@@ -1,5 +1,6 @@
-import type { Customer } from '../types/customer.ts';
+import { countries, type Customer } from '../types/customer.ts';
 import Input from './Input.tsx';
+import Select, { type SelectOption } from './Select.tsx';
 import * as React from 'react';
 import { useState } from 'react';
 import { postCustomer, putCustomer } from '../services/customersApi.ts';
@@ -23,6 +24,12 @@ class ErrorContainer {
   }
 }
 
+const FIRSTNAME_MISSING_ERROR_MSG = 'Bitte gib einen Vornamen ein.';
+const LASTNAME_MISSING_ERROR_MSG = 'Bitte gib einen Nachnamen ein.';
+const DESCRIPTION_TOO_LONG_ERROR_MSG = 'Maximal 100 Zeichen erlaubt';
+const SALES_TAX_ID_WRONG_ERROR_MSG = 'Gib eine gülige Umsatzsteuer-ID ein.';
+const SALES_TAX_ID_ERROR_CODE_FROM_API = 'SALES_TAX_ID_VALIDATION_ERROR';
+
 export default function CustomerEditDialog({ closeFn, customer, isEditing }: CustomerEditDialogProps) {
   const [editingCustomer, setEditingCustomer] = useState<Customer>(customer);
   const [errors, setErrors] = useState<ErrorContainer>(new ErrorContainer());
@@ -31,7 +38,9 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
     setErrors(new ErrorContainer());
     setEditingCustomer((prev: Customer) => ({
       ...prev,
-      [name]: value,
+      // this line ensures that spring boot validation for enumeration mapping does not return 400 on empty string
+      [name]: value === '' ? undefined : value,
+      //   [name]: value,
     }));
   };
 
@@ -41,16 +50,13 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
   const validate = () => {
     const errorsFound = new ErrorContainer();
     if (!editingCustomer.firstName.trim()) {
-      errorsFound.firstName = 'Bitte gib einen Vornamen ein.';
+      errorsFound.firstName = FIRSTNAME_MISSING_ERROR_MSG;
     }
     if (!editingCustomer.lastName.trim()) {
-      errorsFound.lastName = 'Bitte gib einen Nachnamen ein.';
+      errorsFound.lastName = LASTNAME_MISSING_ERROR_MSG;
     }
     if (editingCustomer.description.length > 100) {
-      errorsFound.description = 'Maximal 100 Zeichen erlaubt';
-    }
-    if (editingCustomer.zipCode?.trim() && !/^\d{5}$/.test(editingCustomer.zipCode)) {
-      errorsFound.zipCode = 'Gib eine gültige fünfstellige Postleitzahl ein';
+      errorsFound.description = DESCRIPTION_TOO_LONG_ERROR_MSG;
     }
 
     return errorsFound;
@@ -63,19 +69,16 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
       setErrors(validationErrors);
       return;
     }
-    // workaround to make sure spring boot validation does not throw validation error on empty string
-    if (editingCustomer.zipCode == '') {
-      editingCustomer.zipCode = undefined;
-    }
+
     if (isEditing) {
       try {
         await putCustomer(editingCustomer);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const errorMsg = error.response?.data.message;
-          if (errorMsg === 'SALES_TAX_ID_VALIDATION_ERROR') {
+          if (errorMsg === SALES_TAX_ID_ERROR_CODE_FROM_API) {
             const salesTaxError = new ErrorContainer();
-            salesTaxError.salesTaxId = 'Gib eine gülige Umsatzsteuer-ID ein.';
+            salesTaxError.salesTaxId = SALES_TAX_ID_WRONG_ERROR_MSG;
             setErrors(salesTaxError);
           }
         }
@@ -87,9 +90,9 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const errorMsg = error.response?.data.message;
-          if (errorMsg === 'SALES_TAX_ID_VALIDATION_ERROR') {
+          if (errorMsg === SALES_TAX_ID_ERROR_CODE_FROM_API) {
             const salesTaxError = new ErrorContainer();
-            salesTaxError.salesTaxId = 'Gib eine gülige Umsatzsteuer-ID ein.';
+            salesTaxError.salesTaxId = SALES_TAX_ID_WRONG_ERROR_MSG;
             setErrors(salesTaxError);
           }
         }
@@ -99,17 +102,26 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
     closeFn();
   };
 
+  // map countries to SelectOptions format
+  const countryOptions: SelectOption[] = countries.map((c) => ({
+    value: c.isoCode,
+    label: c.name,
+  }));
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div id="background" className="absolute inset-0 bg-black/50" onClick={closeFn}></div>
       <div id="editDialog" className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
         <div id="closeButtonBar" className="flex min-w-auto items-center justify-end">
-          <button className="p-2 hover:cursor-pointer" onClick={closeFn}>
+          <button
+            className="flex h-8 w-8 items-center justify-center rounded-full p-2 font-bold hover:cursor-pointer hover:bg-gray-200"
+            onClick={closeFn}
+          >
             X
           </button>
         </div>
 
-        <h2 className="mb-4 text-xl font-semibold">Kunden {isEditing ? 'bearbeiten ' : 'anlegen'}</h2>
+        <h2 className="mb-4 text-center text-xl font-semibold">Kunden {isEditing ? 'bearbeiten ' : 'anlegen'}</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -160,6 +172,15 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
             error={errors.zipCode}
           />
           <Input value={editingCustomer.city} label="Ort" placeholder="Ort" name="city" onChange={handleChange} />
+
+          <Select
+            name="country"
+            onChange={handleChange}
+            options={countryOptions}
+            value={editingCustomer.country}
+            label="Land"
+            placeholder="Bitte Land auswählen..."
+          ></Select>
 
           <div id="editButtonBar" className="flex items-center justify-end p-2">
             <button

@@ -1,8 +1,8 @@
 package com.interview.customer_management.customer.rest;
 
+import com.interview.customer_management.customer.entity.Countries;
 import com.interview.customer_management.customer.rest.validation.ValidSalesTaxId;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
@@ -17,9 +17,9 @@ public record CustomerDto(
     @NotBlank(message = "Last name is mandatory.") String lastName,
     @Size(max = 100, message = "Description may only be up to 100 characters") String description,
     String address,
-    @Pattern(regexp = "[0-9]{5}", message = "ZIP codes must be exactly 5 digits long")
-        String zipCode,
+    String zipCode,
     String city,
+    Countries country,
     @ValidSalesTaxId(message = "Sales tax id invalid") String salesTaxId,
     Instant createdAtUtc,
     Instant updatedAtUtc) {}

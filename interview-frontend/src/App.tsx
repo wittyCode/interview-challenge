@@ -50,9 +50,9 @@ function App() {
     <>
       <div className="font-inter min-h-screen min-w-screen bg-gray-100">
         <header className="bg-header-bg mx-auto border-b">
-          <div className="container mx-auto flex h-16 items-center justify-between">
+          <div className="container mx-auto flex h-16 items-center justify-between px-4">
             <div className="bg-primary flex min-h-full items-center p-4">
-              <h1 className="text-lg font-bold tracking-tight text-white">Customer Management Application</h1>
+              <h1 className="text-lg font-bold tracking-tight text-white">Kundenverwaltung</h1>
             </div>
           </div>
         </header>

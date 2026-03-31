@@ -3,6 +3,7 @@ package com.interview.customer_management.rest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.interview.customer_management.customer.entity.Countries;
 import com.interview.customer_management.customer.rest.CustomerController;
 import com.interview.customer_management.customer.rest.CustomerDto;
 import com.interview.customer_management.customer.rest.CustomerDtoMapper;
@@ -61,33 +62,17 @@ public class CustomerControllerTest {
 
   private static Stream<Arguments> provideInvalidCustomerDtos() {
     return Stream.of(
-        Arguments.of(new CustomerDto(0, null, LAST_NAME, null, null, null, null, null, null, null)),
         Arguments.of(
-            new CustomerDto(0, FIRST_NAME, null, null, null, null, null, null, null, null)),
+            new CustomerDto(0, null, LAST_NAME, null, null, null, null, null, null, null, null)),
         Arguments.of(
-            new CustomerDto(
-                0, FIRST_NAME, LAST_NAME, null, null, TOO_SHORT_ZIPCODE, null, null, null, null)),
-        Arguments.of(
-            new CustomerDto(
-                0, FIRST_NAME, LAST_NAME, null, null, TOO_LONG_ZIPCODE, null, null, null, null)),
-        Arguments.of(
-            new CustomerDto(
-                0,
-                FIRST_NAME,
-                LAST_NAME,
-                null,
-                null,
-                ZIP_CODE_WITH_LETTER,
-                null,
-                null,
-                null,
-                null)),
+            new CustomerDto(0, FIRST_NAME, null, null, null, null, null, null, null, null, null)),
         Arguments.of(
             new CustomerDto(
                 0,
                 FIRST_NAME,
                 LAST_NAME,
                 TOO_LONG_DESCRIPTION,
+                null,
                 null,
                 null,
                 null,
@@ -105,6 +90,7 @@ public class CustomerControllerTest {
         "home 123",
         "01234",
         "hometown",
+        Countries.GB,
         "DE123456788",
         Instant.now(),
         Instant.now());
