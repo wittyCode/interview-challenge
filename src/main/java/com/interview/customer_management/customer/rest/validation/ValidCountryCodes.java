@@ -24,6 +24,11 @@ public enum ValidCountryCodes {
     this.validRegexPatterns = validRegexPatterns.stream().map(Pattern::compile).toList();
   }
 
+  /**
+   * find correct country code for given search String
+   *
+   * <p>returns null if none found
+   */
   public static ValidCountryCodes findByString(final String searchString) {
     for (ValidCountryCodes value : ValidCountryCodes.values()) {
       if (value.name().equals(searchString)) {
@@ -33,6 +38,11 @@ public enum ValidCountryCodes {
     return null;
   }
 
+  /**
+   * checks country code validity based on given RegExes for that country
+   *
+   * @throws SalesTaxIdValidationException when invalid
+   */
   public boolean checkValidity(final String salesTaxIdToValidate) {
     final var isValid =
         this.validRegexPatterns.stream().anyMatch(it -> it.matcher(salesTaxIdToValidate).matches());

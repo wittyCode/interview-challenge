@@ -2,6 +2,9 @@ type CloseButtonProps = {
   closeFn: () => void;
 };
 
+/**
+ * component wrapping a close button bar
+ */
 export default function CloseButton({ closeFn }: CloseButtonProps) {
   return (
     <div id="closeButtonBar" className="flex min-w-auto items-center justify-end">

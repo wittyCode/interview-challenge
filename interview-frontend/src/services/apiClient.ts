@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+/**
+ * axios base setup establishing API connection to backend
+ */
 export const apiClient = () => {
   let baseURL = import.meta.env.VITE_BACKEND_API_URL;
 

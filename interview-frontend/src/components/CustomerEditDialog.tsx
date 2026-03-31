@@ -31,6 +31,10 @@ const DESCRIPTION_TOO_LONG_ERROR_MSG = 'Maximal 100 Zeichen erlaubt';
 const SALES_TAX_ID_WRONG_ERROR_MSG = 'Gib eine gülige Umsatzsteuer-ID ein.';
 const SALES_TAX_ID_ERROR_CODE_FROM_API = 'SALES_TAX_ID_VALIDATION_ERROR';
 
+/**
+ * component for editing a customers and persisting the edits to the backend
+ * by calling REST API
+ */
 export default function CustomerEditDialog({ closeFn, customer, isEditing }: CustomerEditDialogProps) {
   const [editingCustomer, setEditingCustomer] = useState<Customer>(customer);
   const [errors, setErrors] = useState<ErrorContainer>(new ErrorContainer());

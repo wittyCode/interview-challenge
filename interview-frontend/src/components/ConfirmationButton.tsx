@@ -2,6 +2,10 @@ type ButtonProps = {
   label: string;
   clickHandler: () => void;
 };
+
+/**
+ * component wrapping a confirmation button bar
+ */
 export function ConfirmationButton({ label, clickHandler }: ButtonProps) {
   return (
     <div id="editButtonBar" className="flex items-center justify-end p-2">

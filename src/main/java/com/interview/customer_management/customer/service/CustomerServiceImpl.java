@@ -5,7 +5,6 @@ import com.interview.customer_management.customer.entity.CustomerRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @see CustomerService
@@ -34,7 +33,6 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  @Transactional
   public Customer save(final Customer entity) {
     return customerRepository.save(entity);
   }

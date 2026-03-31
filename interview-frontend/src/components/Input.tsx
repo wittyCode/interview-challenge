@@ -7,6 +7,9 @@ type InputProps = {
   error?: string;
 };
 
+/**
+ * Component wrapping input element
+ */
 export default function Input({ onChange, name, value, placeholder, label, error }: InputProps) {
   const inputId = name + 'Input';
 

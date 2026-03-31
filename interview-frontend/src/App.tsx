@@ -60,7 +60,7 @@ function App() {
           <div id="utiltyBar" className="flex justify-end">
             <button
               className="bg-btn-primary hover:bg-btn-hover rounded-xl p-4 font-bold text-white hover:cursor-pointer"
-              onClick={() => handleAddCustomer()}
+              onClick={handleAddCustomer}
             >
               + Neuen Kunden anlegen
             </button>

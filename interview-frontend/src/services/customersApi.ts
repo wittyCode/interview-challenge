@@ -1,6 +1,9 @@
 import { apiClient } from './apiClient.ts';
 import type { Customer } from '../types/customer.ts';
 
+/**
+ * axios based CRUD REST API calls
+ */
 export const getCustomers = async (): Promise<Customer[]> => {
   const response = await apiClient().get('/customers');
   return response.data;

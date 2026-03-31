@@ -1,3 +1,6 @@
+/**
+ * all types necessary for building customer related functionalities
+ */
 export interface Customer {
   id: number;
   firstName: string;

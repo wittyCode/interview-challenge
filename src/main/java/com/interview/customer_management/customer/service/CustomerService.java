@@ -10,13 +10,22 @@ import java.util.List;
 public interface CustomerService {
 
   /**
-   * @return all customers, ordered by Id
+   * @return all customers in DB
    */
   List<Customer> findAll();
 
+  /**
+   * @return customer entity with given ID in DB
+   */
   Customer findById(final long id);
 
+  /**
+   * save automatically creates new entity when given id is 0, else updates existing entity
+   *
+   * @return updated entity from DB
+   */
   Customer save(final Customer customer);
 
+  /** delete customer with given ID in DB if customer did not exist, silently aknowledge */
   void deleteById(final long id);
 }

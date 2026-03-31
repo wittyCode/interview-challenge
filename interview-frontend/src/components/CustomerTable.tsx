@@ -13,19 +13,27 @@ type CustomerTableProps = {
   errorMsg: string | null;
 };
 
+/**
+ * component for displaying customers in a table format
+ */
 export default function CustomerTable({ customers, editFn, deleteFn, isLoading, errorMsg }: CustomerTableProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [currentCustomer, setCurrentCustomer] = React.useState<Customer>();
 
   const rowClasses = 'rounded-2xl bg-white hover:bg-gray-200 border-b-2 border-gray-200';
+  // ensuring last row has correct rendering of rounded table corners
+  const firstNameCellClasses = 'p-4';
   const buttonCellClasses = 'py-4';
   const lastButtonCellClasses = 'rounded-br-2xl ' + buttonCellClasses;
+  const firstButtonCellClasses = 'rounded-bl-2xl ' + firstNameCellClasses;
 
   // sort customers to maintain ordering on reload
   const sortedCustomers = [...customers].sort((a, b) => a.id - b.id);
   const customersToRows = sortedCustomers.map((customer, index) => (
     <tr key={customer.id} className={rowClasses}>
-      <td className={index === customers.length - 1 ? 'rounded-bl-2xl p-4' : 'p-4'}>{customer.firstName}</td>
+      <td className={index === customers.length - 1 ? firstButtonCellClasses : firstNameCellClasses}>
+        {customer.firstName}
+      </td>
       <td>{customer.lastName}</td>
       <td>{customer.description}</td>
       <td>{customer.salesTaxId}</td>

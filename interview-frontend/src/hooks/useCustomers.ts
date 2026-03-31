@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import type { Customer } from '../types/customer.ts';
 import { getCustomers } from '../services/customersApi.ts';
 
+/**
+ * utilty function wrapping REST API calls to load customers
+ *
+ * handles loading indicator and error message as well
+ *
+ * using useEffect hook to run on component mounting
+ */
 export function useCustomers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

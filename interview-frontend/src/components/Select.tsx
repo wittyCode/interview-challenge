@@ -12,6 +12,9 @@ type SelectProps = {
   label?: string;
 };
 
+/**
+ * Component wrapping select element
+ */
 export default function Select({ name, value, onChange, options, placeholder, label }: SelectProps) {
   const selectId = name + 'Select';
 
