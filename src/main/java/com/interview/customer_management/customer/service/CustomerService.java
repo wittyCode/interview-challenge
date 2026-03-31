@@ -12,7 +12,7 @@ public interface CustomerService {
   /**
    * @return all customers, ordered by Id
    */
-  List<Customer> findAllOrderById();
+  List<Customer> findAll();
 
   Customer findById(final long id);
 

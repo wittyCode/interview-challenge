@@ -21,8 +21,8 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public List<Customer> findAllOrderById() {
-    return customerRepository.findAllByOrderById();
+  public List<Customer> findAll() {
+    return customerRepository.findAll();
   }
 
   @Override

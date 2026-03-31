@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { postCustomer, putCustomer } from '../services/customersApi.ts';
 import axios from 'axios';
+import CloseButton from './CloseButton.tsx';
 
 type CustomerEditDialogProps = {
   closeFn: () => void;
@@ -111,14 +112,7 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div id="background" className="absolute inset-0 bg-black/50" onClick={closeFn}></div>
       <div id="editDialog" className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
-        <div id="closeButtonBar" className="flex min-w-auto items-center justify-end">
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-full p-2 font-bold hover:cursor-pointer hover:bg-gray-200"
-            onClick={closeFn}
-          >
-            X
-          </button>
-        </div>
+        <CloseButton closeFn={closeFn} />
 
         <h2 className="mb-4 text-center text-xl font-semibold">Kunden {isEditing ? 'bearbeiten ' : 'anlegen'}</h2>
 

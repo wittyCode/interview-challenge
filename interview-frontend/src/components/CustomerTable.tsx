@@ -2,6 +2,8 @@ import type { Customer } from '../types/customer.ts';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import useCountryCodeToNameMapping from '../hooks/useCountryCodeMapping.ts';
 import * as React from 'react';
+import CloseButton from './CloseButton.tsx';
+import { ConfirmationButton } from './ConfirmationButton.tsx';
 
 type CustomerTableProps = {
   customers: Customer[];
@@ -19,7 +21,9 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
   const buttonCellClasses = 'py-4';
   const lastButtonCellClasses = 'rounded-br-2xl ' + buttonCellClasses;
 
-  const customersToRows = customers.map((customer, index) => (
+  // sort customers to maintain ordering on reload
+  const sortedCustomers = [...customers].sort((a, b) => a.id - b.id);
+  const customersToRows = sortedCustomers.map((customer, index) => (
     <tr key={customer.id} className={rowClasses}>
       <td className={index === customers.length - 1 ? 'rounded-bl-2xl p-4' : 'p-4'}>{customer.firstName}</td>
       <td>{customer.lastName}</td>
@@ -68,8 +72,8 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
               <tr className="border-gray-200 font-semibold">
                 <td className="p-4">Vorname</td>
                 <td>Nachname</td>
-                <td>Beschreibung</td>
-                <td>Ust-Idnr.</td>
+                <td>Informationen</td>
+                <td>Umsatzsteuer-ID</td>
                 <td>Adresse</td>
                 <td>PLZ</td>
                 <td>Ort</td>
@@ -85,23 +89,12 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div id="background" className="absolute inset-0 bg-black/50" onClick={() => closeDeleteDialog()}></div>
           <div id="deleteDialog" className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg">
-            <div id="closeButtonBar" className="flex min-w-auto items-center justify-end">
-              <button
-                className="flex h-8 w-8 items-center justify-center rounded-full p-2 font-bold hover:cursor-pointer hover:bg-gray-200"
-                onClick={() => closeDeleteDialog()}
-              >
-                X
-              </button>
-            </div>
+            <CloseButton closeFn={() => closeDeleteDialog()} />
+
             <p className="my-4 py-4 font-semibold">Willst Du den Kunden wirklich löschen?</p>
 
             <div id="deleteButtonBar" className="flex items-center justify-end p-2">
-              <button
-                className="bg-btn-primary hover:bg-btn-hover rounded-xl p-4 font-bold text-white hover:cursor-pointer"
-                onClick={() => confirmDelete()}
-              >
-                Löschen
-              </button>
+              <ConfirmationButton label="Löschen" clickHandler={() => confirmDelete()} />
             </div>
           </div>
         </div>
