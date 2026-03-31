@@ -40,7 +40,6 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
       ...prev,
       // this line ensures that spring boot validation for enumeration mapping does not return 400 on empty string
       [name]: value === '' ? undefined : value,
-      //   [name]: value,
     }));
   };
 
@@ -49,13 +48,13 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
    */
   const validate = () => {
     const errorsFound = new ErrorContainer();
-    if (!editingCustomer.firstName.trim()) {
+    if (!editingCustomer.firstName?.trim()) {
       errorsFound.firstName = FIRSTNAME_MISSING_ERROR_MSG;
     }
-    if (!editingCustomer.lastName.trim()) {
+    if (!editingCustomer.lastName?.trim()) {
       errorsFound.lastName = LASTNAME_MISSING_ERROR_MSG;
     }
-    if (editingCustomer.description.length > 100) {
+    if (editingCustomer.description?.length > 100) {
       errorsFound.description = DESCRIPTION_TOO_LONG_ERROR_MSG;
     }
 

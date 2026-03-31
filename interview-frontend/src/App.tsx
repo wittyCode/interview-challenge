@@ -29,7 +29,6 @@ function App() {
   };
 
   const handleDeleteCustomer = async (customer: Customer) => {
-    // todo do you really want to delete modal?
     await deleteCustomer(customer);
     loadCustomers();
   };
