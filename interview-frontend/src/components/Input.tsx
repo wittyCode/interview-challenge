@@ -10,7 +10,7 @@ type InputProps = {
 /**
  * Component wrapping input element
  */
-export default function Input({ onChange, name, value, placeholder, label, error }: InputProps) {
+export default function Input({ onChange, name, value, placeholder, label, error }: Readonly<InputProps>) {
   const inputId = name + 'Input';
 
   return (

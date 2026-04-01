@@ -1,11 +1,12 @@
-import { countries, type Customer } from '../types/customer.ts';
+import { countries, type Customer, type CustomerErrorMessage } from '../types/customer.ts';
 import Input from './Input.tsx';
 import Select, { type SelectOption } from './Select.tsx';
 import * as React from 'react';
 import { useState } from 'react';
 import { postCustomer, putCustomer } from '../services/customersApi.ts';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import CloseButton from './CloseButton.tsx';
+import { ConfirmationButton } from './ConfirmationButton.tsx';
 
 type CustomerEditDialogProps = {
   closeFn: () => void;
@@ -35,7 +36,7 @@ const SALES_TAX_ID_ERROR_CODE_FROM_API = 'SALES_TAX_ID_VALIDATION_ERROR';
  * component for editing a customers and persisting the edits to the backend
  * by calling REST API
  */
-export default function CustomerEditDialog({ closeFn, customer, isEditing }: CustomerEditDialogProps) {
+export default function CustomerEditDialog({ closeFn, customer, isEditing }: Readonly<CustomerEditDialogProps>) {
   const [editingCustomer, setEditingCustomer] = useState<Customer>(customer);
   const [errors, setErrors] = useState<ErrorContainer>(new ErrorContainer());
 
@@ -66,8 +67,40 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
     return errorsFound;
   };
 
+  const updateCustomer = async () => {
+    try {
+      await putCustomer(editingCustomer);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        handleAxiosError(error);
+      }
+      return;
+    }
+  };
+
+  const createCustomer = async () => {
+    try {
+      await postCustomer(editingCustomer);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        handleAxiosError(error);
+      }
+      return;
+    }
+  };
+
+  const handleAxiosError = (error: AxiosError<CustomerErrorMessage>) => {
+    const errorMsg = error.response?.data.message;
+    if (errorMsg === SALES_TAX_ID_ERROR_CODE_FROM_API) {
+      const salesTaxError = new ErrorContainer();
+      salesTaxError.salesTaxId = SALES_TAX_ID_WRONG_ERROR_MSG;
+      setErrors(salesTaxError);
+    }
+  };
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const validationErrors = validate();
     if (validationErrors.hasValidationIssues()) {
       setErrors(validationErrors);
@@ -75,33 +108,9 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
     }
 
     if (isEditing) {
-      try {
-        await putCustomer(editingCustomer);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          const errorMsg = error.response?.data.message;
-          if (errorMsg === SALES_TAX_ID_ERROR_CODE_FROM_API) {
-            const salesTaxError = new ErrorContainer();
-            salesTaxError.salesTaxId = SALES_TAX_ID_WRONG_ERROR_MSG;
-            setErrors(salesTaxError);
-          }
-        }
-        return;
-      }
+      await updateCustomer();
     } else {
-      try {
-        await postCustomer(editingCustomer);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          const errorMsg = error.response?.data.message;
-          if (errorMsg === SALES_TAX_ID_ERROR_CODE_FROM_API) {
-            const salesTaxError = new ErrorContainer();
-            salesTaxError.salesTaxId = SALES_TAX_ID_WRONG_ERROR_MSG;
-            setErrors(salesTaxError);
-          }
-        }
-        return;
-      }
+      await createCustomer();
     }
     closeFn();
   };
@@ -179,14 +188,7 @@ export default function CustomerEditDialog({ closeFn, customer, isEditing }: Cus
             placeholder="Bitte Land auswählen..."
           ></Select>
 
-          <div id="editButtonBar" className="flex items-center justify-end p-2">
-            <button
-              className="bg-btn-primary hover:bg-btn-hover rounded-xl p-4 font-bold text-white hover:cursor-pointer"
-              type="submit"
-            >
-              Speichern
-            </button>
-          </div>
+          <ConfirmationButton label="Speichern" type="submit" />
         </form>
       </div>
     </div>

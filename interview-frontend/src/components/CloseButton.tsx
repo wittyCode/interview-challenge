@@ -5,7 +5,7 @@ type CloseButtonProps = {
 /**
  * component wrapping a close button bar
  */
-export default function CloseButton({ closeFn }: CloseButtonProps) {
+export default function CloseButton({ closeFn }: Readonly<CloseButtonProps>) {
   return (
     <div id="closeButtonBar" className="flex min-w-auto items-center justify-end">
       <button

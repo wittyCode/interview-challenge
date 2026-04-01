@@ -20,6 +20,7 @@ export function useCustomers() {
       const response = await getCustomers();
       setCustomers(response);
     } catch (error) {
+      console.error('Exception on loading customers from backend', error);
       setError('Error when fetching customer data, check logs for details.');
     } finally {
       setLoading(false);

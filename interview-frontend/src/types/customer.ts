@@ -1,7 +1,7 @@
 /**
  * all types necessary for building customer related functionalities
  */
-export interface Customer {
+export type Customer = {
   id: number;
   firstName: string;
   lastName: string;
@@ -13,7 +13,7 @@ export interface Customer {
   country?: string;
   createdAtUtc?: Date;
   updatedAtUtc?: Date;
-}
+};
 
 export type CountryOption = {
   isoCode: string;
@@ -28,3 +28,8 @@ export const countries: CountryOption[] = [
   { isoCode: 'DK', name: 'Dänemark' },
   { isoCode: 'NL', name: 'Niederlande' },
 ];
+
+export type CustomerErrorMessage = {
+  message: string;
+  timestamp: number;
+};

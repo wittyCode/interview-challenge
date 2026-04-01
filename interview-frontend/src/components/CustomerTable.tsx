@@ -1,6 +1,5 @@
-import type { Customer } from '../types/customer.ts';
+import { countries, type Customer } from '../types/customer.ts';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import useCountryCodeToNameMapping from '../hooks/useCountryCodeMapping.ts';
 import * as React from 'react';
 import CloseButton from './CloseButton.tsx';
 import { ConfirmationButton } from './ConfirmationButton.tsx';
@@ -16,7 +15,13 @@ type CustomerTableProps = {
 /**
  * component for displaying customers in a table format
  */
-export default function CustomerTable({ customers, editFn, deleteFn, isLoading, errorMsg }: CustomerTableProps) {
+export default function CustomerTable({
+  customers,
+  editFn,
+  deleteFn,
+  isLoading,
+  errorMsg,
+}: Readonly<CustomerTableProps>) {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [currentCustomer, setCurrentCustomer] = React.useState<Customer>();
 
@@ -29,28 +34,32 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
 
   // sort customers to maintain ordering on reload
   const sortedCustomers = [...customers].sort((a, b) => a.id - b.id);
-  const customersToRows = sortedCustomers.map((customer, index) => (
-    <tr key={customer.id} className={rowClasses}>
-      <td className={index === customers.length - 1 ? firstButtonCellClasses : firstNameCellClasses}>
-        {customer.firstName}
-      </td>
-      <td>{customer.lastName}</td>
-      <td>{customer.description}</td>
-      <td>{customer.salesTaxId}</td>
-      <td>{customer.address}</td>
-      <td>{customer.zipCode}</td>
-      <td>{customer.city}</td>
-      <td>{customer.country && useCountryCodeToNameMapping(customer.country)}</td>
-      <td className={index === customers.length - 1 ? lastButtonCellClasses : buttonCellClasses}>
-        <button onClick={() => editFn(customer)} className="hover:cursor-pointer">
-          <MdEdit size="1.5em" />
-        </button>
-        <button onClick={() => openDeleteDialog(customer)} className="hover:cursor-pointer">
-          <MdDelete size="1.5em" />
-        </button>
-      </td>
-    </tr>
-  ));
+  const customersToRows = sortedCustomers.map((customer, index) => {
+    const country = countries.find((country) => country.isoCode === customer.country);
+    const displayCountry = country ? country.name : '';
+    return (
+      <tr key={customer.id} className={rowClasses}>
+        <td className={index === customers.length - 1 ? firstButtonCellClasses : firstNameCellClasses}>
+          {customer.firstName}
+        </td>
+        <td>{customer.lastName}</td>
+        <td>{customer.description}</td>
+        <td>{customer.salesTaxId}</td>
+        <td>{customer.address}</td>
+        <td>{customer.zipCode}</td>
+        <td>{customer.city}</td>
+        <td>{displayCountry}</td>
+        <td className={index === customers.length - 1 ? lastButtonCellClasses : buttonCellClasses}>
+          <button onClick={() => editFn(customer)} className="hover:cursor-pointer">
+            <MdEdit size="1.5em" />
+          </button>
+          <button onClick={() => openDeleteDialog(customer)} className="hover:cursor-pointer">
+            <MdDelete size="1.5em" />
+          </button>
+        </td>
+      </tr>
+    );
+  });
 
   const openDeleteDialog = (customer: Customer) => {
     setDeleteDialogOpen(true);
@@ -95,14 +104,14 @@ export default function CustomerTable({ customers, editFn, deleteFn, isLoading, 
 
       {deleteDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div id="background" className="absolute inset-0 bg-black/50" onClick={() => closeDeleteDialog()}></div>
+          <div id="background" className="absolute inset-0 bg-black/50" onClick={closeDeleteDialog}></div>
           <div id="deleteDialog" className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg">
             <CloseButton closeFn={() => closeDeleteDialog()} />
 
             <p className="my-4 py-4 font-semibold">Willst Du den Kunden wirklich löschen?</p>
 
             <div id="deleteButtonBar" className="flex items-center justify-end p-2">
-              <ConfirmationButton label="Löschen" clickHandler={() => confirmDelete()} />
+              <ConfirmationButton label="Löschen" type={undefined} clickHandler={confirmDelete} />
             </div>
           </div>
         </div>

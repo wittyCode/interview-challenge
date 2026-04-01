@@ -15,7 +15,7 @@ type SelectProps = {
 /**
  * Component wrapping select element
  */
-export default function Select({ name, value, onChange, options, placeholder, label }: SelectProps) {
+export default function Select({ name, value, onChange, options, placeholder, label }: Readonly<SelectProps>) {
   const selectId = name + 'Select';
 
   return (
