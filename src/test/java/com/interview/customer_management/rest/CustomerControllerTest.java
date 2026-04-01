@@ -25,15 +25,12 @@ import tools.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = CustomerController.class)
-public class CustomerControllerTest {
+class CustomerControllerTest {
 
   private static final String TOO_LONG_DESCRIPTION =
       "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901";
   private static final String FIRST_NAME = "firstName";
   private static final String LAST_NAME = "lastName";
-  private static final String TOO_SHORT_ZIPCODE = "0123";
-  private static final String TOO_LONG_ZIPCODE = "012345";
-  private static final String ZIP_CODE_WITH_LETTER = "0123A";
 
   @Autowired private MockMvc mockMvc;
 
@@ -45,8 +42,8 @@ public class CustomerControllerTest {
 
   @ParameterizedTest
   @MethodSource("provideInvalidCustomerDtos")
-  void whenInputIsInvalid_return400(CustomerDto input) throws Exception {
-    String body = objectMapper.writeValueAsString(input);
+  void whenInputIsInvalid_return400(final CustomerDto input) throws Exception {
+    final var body = objectMapper.writeValueAsString(input);
     mockMvc
         .perform(post("/api/customers").contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isBadRequest());
@@ -54,7 +51,7 @@ public class CustomerControllerTest {
 
   @Test
   void whenInputInvalid_return200() throws Exception {
-    String body = objectMapper.writeValueAsString(validCustomerDto());
+    final var body = objectMapper.writeValueAsString(validCustomerDto());
     mockMvc
         .perform(post("/api/customers").contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isOk());
